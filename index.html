@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Focus Timer - Açık Kaynak Pomodoro Sayacı</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #282c34;
+            color: white;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            background: #1e2227;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        h1 { margin-bottom: 5px; color: #61dafb; }
+        p { color: #abb2bf; margin-bottom: 30px; }
+        #timer {
+            font-size: 80px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: #98c379;
+        }
+        button {
+            background-color: #61dafb;
+            color: #282c34;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 10px;
+            transition: background 0.3s;
+        }
+        button:hover { background-color: #52b6f0; }
+        #reset { background-color: #e06c75; color: white; }
+        #reset:hover { background-color: #c95c65; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Focus Timer</h1>
+        <p>Açık Kaynak Kodlu Odaklanma Aracı</p>
+        <div id="timer">25:00</div>
+        <div>
+            <button id="startPause" onclick="toggleTimer()">Başlat</button>
+            <button id="reset" onclick="resetTimer()">Sıfırla</button>
+        </div>
+    </div>
+
+    <script>
+        let timeLeft = 1500; // 25 dakika = 1500 saniye
+        let timerId = null;
+        let isRunning = false;
+
+        const timerDisplay = document.getElementById('timer');
+        const startPauseBtn = document.getElementById('startPause');
+
+        function updateDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function toggleTimer() {
+            if (isRunning) {
+                clearInterval(timerId);
+                startPauseBtn.textContent = 'Devam Et';
+                isRunning = false;
+            } else {
+                timerId = setInterval(() => {
+                    timeLeft--;
+                    updateDisplay();
+                    if (timeLeft === 0) {
+                        clearInterval(timerId);
+                        alert('Tebrikler! 25 dakikalık odaklanma süreniz bitti.');
+                        resetTimer();
+                    }
+                }, 1000);
+                startPauseBtn.textContent = 'Duraklat';
+                isRunning = true;
+            }
+        }
+
+        function resetTimer() {
+            clearInterval(timerId);
+            timeLeft = 1500;
+            isRunning = false;
+            startPauseBtn.textContent = 'Başlat';
+            updateDisplay();
+        }
+    </script>
+</body>
+</html>
